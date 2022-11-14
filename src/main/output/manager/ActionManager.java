@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import fileio.ActionsInput;
 import fileio.Coordinates;
 import lombok.Data;
+import main.Exceptions.HeroDiedException;
 import main.Exceptions.InvalidPlacementException;
 import main.cards.Card;
 import main.cards.enviroment.EnvironmentCard;
@@ -59,8 +60,26 @@ class ActionManager {
                 return useEnvironmentAction(action.getHandIdx(), action.getAffectedRow());
             case GET_CARD_AT_INDEX_COMMAND:
                 return getCardAtIndexAction(action.getX(), action.getY());
+            case ATTACK_HERO_COMMAND:
+                return attackHeroAction(action.getCardAttacker());
             default:
                 return new ActionOutput(action.getCommand());
+        }
+    }
+
+    private ActionOutput attackHeroAction(Coordinates cardAttacker) {
+        try {
+        Minion attacker = game.getBoard().get(cardAttacker.getX()).get(cardAttacker.getY());
+            attacker.attackHero(game);
+            return new ActionOutput(EMPTY);
+        } catch (HeroDiedException e) {
+            ActionOutput endGame = new ActionOutput();
+            System.out.println(e.getMessage());
+            endGame.setGameEnded(e.getMessage());
+            return endGame;
+        } catch (Exception e) {
+
+            return new ActionOutput(ATTACK_HERO_COMMAND, cardAttacker , e.getMessage());
         }
     }
 

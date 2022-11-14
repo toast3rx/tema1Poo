@@ -53,7 +53,7 @@ public class Game {
 
         for (ActionsInput action : actions) {
             ActionOutput actionOutput = actionManager.manageAction(action, output);
-            if (actionOutput.getCommand().equals(EMPTY)) {
+            if ((actionOutput.getGameEnded() == null) && actionOutput.getCommand().equals(EMPTY)) {
                 continue;
             }
             output.addPOJO(actionOutput);

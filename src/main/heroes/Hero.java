@@ -10,7 +10,7 @@ import java.util.ArrayList;
 @Data
 @NoArgsConstructor
 @JsonPropertyOrder({"mana", "description", "colors", "name", "health"})
-public abstract class Hero {
+public abstract class Hero implements Cloneable{
     protected String name;
     protected String description;
     protected ArrayList<String> colors;
@@ -26,5 +26,17 @@ public abstract class Hero {
         this.health = 30;
     }
 
+
+
     public abstract void useAbility(ArrayList<Minion> selectedRow);
+
+    @Override
+    public Hero clone() {
+        try {
+            Hero clone = (Hero) super.clone();
+            return clone;
+        } catch (CloneNotSupportedException e) {
+            throw new AssertionError();
+        }
+    }
 }

@@ -68,10 +68,6 @@ public class Minion extends Card {
             }
         }
 
-//        if (existsTank && !(game.getBoard().get(x).get(y) instanceof Tank)) {
-//            throw new Exception("Attacked card is not of type 'Tank'.");
-//        }
-
         if (existsTank) {
                 throw new Exception("Attacked card is not of type 'Tank'.");
 
@@ -84,7 +80,7 @@ public class Minion extends Card {
         usedTurn = true;
 
         if (enemyHero.getHealth() <= 0) {
-            throw new HeroDiedException("Player " + game.getPlayerTurn() + " killed the enemy hero.");
+            throw new HeroDiedException("Player " + (game.getPlayerTurn() == 1 ? "one" : "two") + " killed the enemy hero.");
         }
     }
 

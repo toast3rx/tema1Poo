@@ -37,15 +37,9 @@
   "playerIdx" : 2,
   "output" : 1
 }, {
-  "command" : "useAttackHero"
-}, {
   "command" : "getEnvironmentCardsInHand",
   "playerIdx" : 1,
   "output" : [ ]
-}, {
-  "command" : "useAttackHero"
-}, {
-  "command" : "useAttackHero"
 }, {
   "command" : "getFrozenCardsOnTable",
   "output" : [ ]
@@ -70,12 +64,6 @@
   "command" : "getPlayerTurn",
   "output" : 2
 }, {
-  "command" : "useAttackHero"
-}, {
-  "command" : "useAttackHero"
-}, {
-  "command" : "useAttackHero"
-}, {
   "command" : "getEnvironmentCardsInHand",
   "playerIdx" : 1,
   "output" : [ ]
@@ -92,11 +80,7 @@
     "name" : "Berserker"
   }
 }, {
-  "command" : "useAttackHero"
-}, {
-  "command" : "useAttackHero"
-}, {
-  "command" : "useAttackHero"
+  "gameEnded" : "Player two killed the enemy hero."
 }, {
   "command" : "getPlayerMana",
   "playerIdx" : 2,
@@ -196,8 +180,6 @@
     "name" : "Warden"
   }
 }, {
-  "command" : "useAttackHero"
-}, {
   "command" : "getPlayerMana",
   "playerIdx" : 2,
   "output" : 1
@@ -226,12 +208,6 @@
   "command" : "getPlayerMana",
   "playerIdx" : 1,
   "output" : 1
-}, {
-  "command" : "useAttackHero"
-}, {
-  "command" : "useAttackHero"
-}, {
-  "command" : "useAttackHero"
 }, {
   "command" : "getPlayerTurn",
   "output" : 1
@@ -273,7 +249,7 @@
   "playerIdx" : 1,
   "output" : 4
 }, {
-  "command" : "useAttackHero"
+  "gameEnded" : "Player one killed the enemy hero."
 }, {
   "command" : "getPlayerMana",
   "playerIdx" : 1,

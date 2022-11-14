@@ -89,11 +89,6 @@ public final class Main {
             ArrayList<CardInput> deckFirstPlayer = inputData.getPlayerOneDecks().getDecks().get(deck1Index);
             ArrayList<CardInput> deckSecondPlayer = inputData.getPlayerTwoDecks().getDecks().get(deck2Index);
 
-//            Random random = new Random(gameInput.getStartGame().getShuffleSeed());
-//            Collections.shuffle(deckFirstPlayer, random);
-//            Collections.shuffle(deckSecondPlayer, random);
-//            Collections.shuffle(deckFirstPlayer, new Random(gameInput.getStartGame().getShuffleSeed()));
-//            Collections.shuffle(deckSecondPlayer, new Random(gameInput.getStartGame().getShuffleSeed()));
 
             ArrayList<Card> playerOneDeck = GameUtils.cardsInputToCards(deckFirstPlayer);
             ArrayList<Card> playerTwoDeck = GameUtils.cardsInputToCards(deckSecondPlayer);

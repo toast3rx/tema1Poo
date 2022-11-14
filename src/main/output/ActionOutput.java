@@ -2,17 +2,18 @@ package main.output;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import fileio.Coordinates;
-import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.*;
 import main.cards.Card;
 import main.cards.minion.Minion;
+import main.heroes.EmpressThorina;
 import main.heroes.Hero;
 
-import javax.swing.*;
 import java.util.ArrayList;
 
-@Data
+@Setter
+@Getter
 @AllArgsConstructor
+@NoArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ActionOutput {
     protected String command = null;
@@ -32,6 +33,8 @@ public class ActionOutput {
 
     private String error = null;
 
+    private String gameEnded = null;
+
     /**
      * General output object
      */
@@ -49,6 +52,15 @@ public class ActionOutput {
         this.cardAttacked = new Coordinates();
         this.cardAttacked.setX(cardAttacked.getX());
         this.cardAttacked.setY(cardAttacked.getY());
+
+        this.error = error;
+    }
+
+    public ActionOutput(String command, Coordinates cardAttacker, String error) {
+        this.command = command;
+        this.cardAttacker = new Coordinates();
+        this.cardAttacker.setX(cardAttacker.getX());
+        this.cardAttacker.setY(cardAttacker.getY());
 
         this.error = error;
     }
@@ -109,7 +121,8 @@ public class ActionOutput {
     public ActionOutput(String command, Integer playerIdx, Hero output) {
         this.command = command;
         this.playerIdx = playerIdx;
-        this.output = output;
+
+        this.output =  output.clone();
     }
 
     /** Constructor for place card action */
