@@ -35,6 +35,7 @@ public class ActionOutput {
 
     private String gameEnded = null;
 
+
     /**
      * General output object
      */

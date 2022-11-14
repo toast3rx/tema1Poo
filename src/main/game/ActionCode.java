@@ -20,4 +20,8 @@ public class ActionCode {
     public static final String ATTACK_HERO_COMMAND = "useAttackHero";
     public static final String GET_ENVIRONMENT_CARDS_IN_HAND_COMMAND = "getEnvironmentCardsInHand";
     public static final String GET_FROZEN_CARDS_COMMAND = "getFrozenCardsOnTable";
+    public static final String USE_HERO_ABILITY_COMMAND = "useHeroAbility";
+    public static final String GAMES_PLAYED_COMMAND = "getTotalGamesPlayed";
+    public static final String PLAYER_ONE_WINS_COMMAND = "getPlayerOneWins";
+    public static final String PLAYER_TWO_WINS_COMMAND = "getPlayerTwoWins";
 }

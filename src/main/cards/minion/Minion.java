@@ -1,12 +1,10 @@
 package main.cards.minion;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import lombok.Data;
 import main.Exceptions.HeroDiedException;
 import main.cards.Card;
-import main.cards.minion.SpecialMinion.Disciple;
 import main.game.Game;
 import main.heroes.Hero;
 
@@ -54,13 +52,6 @@ public class Minion extends Card {
 
         boolean existsTank = false;
 
-        for (Minion minion : game.getBoard().get(3 - backRow)) {
-            if (minion instanceof Tank) {
-                existsTank = true;
-                break;
-            }
-        }
-
         for (Minion minion : game.getBoard().get(3 - frontRow)) {
             if (minion instanceof Tank) {
                 existsTank = true;
@@ -69,7 +60,7 @@ public class Minion extends Card {
         }
 
         if (existsTank) {
-                throw new Exception("Attacked card is not of type 'Tank'.");
+            throw new Exception("Attacked card is not of type 'Tank'.");
 
         }
 
@@ -115,20 +106,13 @@ public class Minion extends Card {
         int backRow = game.getPlayerTurn() == 1 ? 3 : 0;
         int frontRow = game.getPlayerTurn() == 1 ? 2 : 1;
 
-            if (x == backRow || x == frontRow) {
-                throw new Exception("Attacked card does not belong to the enemy.");
+        if (x == backRow || x == frontRow) {
+            throw new Exception("Attacked card does not belong to the enemy.");
 
         }
-
 
         boolean existsTank = false;
 
-        for (Minion minion : game.getBoard().get(3 - backRow)) {
-            if (minion instanceof Tank) {
-                existsTank = true;
-                break;
-            }
-        }
 
         for (Minion minion : game.getBoard().get(3 - frontRow)) {
             if (minion instanceof Tank) {
@@ -137,21 +121,13 @@ public class Minion extends Card {
             }
         }
 
-//        if (existsTank && !(game.getBoard().get(x).get(y) instanceof Tank)) {
-//            throw new Exception("Attacked card is not of type 'Tank'.");
-//        }
 
         if (existsTank) {
             if (!(game.getBoard().get(x).get(y) instanceof Tank)) {
-//                System.out.println("NOT A TANK");
-//                System.out.println("X: " + x + " Y: " + y);
-//                System.out.println("Card name: " + game.getBoard().get(x).get(y).getName());
                 throw new Exception("Attacked card is not of type 'Tank'.");
-
             }
         }
     }
-
 
     public void setAttackDamage(int attackDamage) {
         attackDamage = Math.max(attackDamage, 0);

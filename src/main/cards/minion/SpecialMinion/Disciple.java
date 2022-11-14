@@ -51,18 +51,6 @@ public class Disciple extends SpecialMinion implements BackRow {
             }
         }
 
-//        if (existsTank && !(game.getBoard().get(x).get(y) instanceof Tank)) {
-//            throw new Exception("Attacked card is not of type 'Tank'.");
-//        }
-
-        if (existsTank) {
-            if (!(game.getBoard().get(x).get(y) instanceof Tank)) {
-//                System.out.println("NOT A TANK");
-//                System.out.println("X: " + x + " Y: " + y);
-//                System.out.println("Card name: " + game.getBoard().get(x).get(y).getName());
-                throw new Exception("Attacked card is not of type 'Tank'.");
-
-            }
 
             Minion target = game.getBoard().get(x).get(y);
 
@@ -71,5 +59,5 @@ public class Disciple extends SpecialMinion implements BackRow {
             setUsedTurn(true);
 
         }
-    }
+
 }

@@ -12,6 +12,7 @@ import main.cards.minion.SpecialMinion.SpecialMinion;
 import main.output.*;
 import main.output.manager.ActionManager;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 import static main.game.ActionCode.*;
@@ -19,6 +20,9 @@ import static main.game.ActionCode.*;
 
 @Data
 public class Game {
+
+    public static int playerOneWins = 0;
+    public static int playerTwoWins = 0;
 
     public final int ROW_NUMBERS = 4;
     public final int MAX_CARDS_ON_ROW = 5;
@@ -53,9 +57,11 @@ public class Game {
 
         for (ActionsInput action : actions) {
             ActionOutput actionOutput = actionManager.manageAction(action, output);
+
             if ((actionOutput.getGameEnded() == null) && actionOutput.getCommand().equals(EMPTY)) {
                 continue;
             }
+
             output.addPOJO(actionOutput);
         }
     }
@@ -66,17 +72,14 @@ public class Game {
         this.playerOne.setEndedTurn(false);
         this.playerTwo.setEndedTurn(false);
 
+
         this.playerOne.drawCard();
         this.playerTwo.drawCard();
-
 
         this.playerOne.setMana(this.playerOne.getMana() + Math.min(roundNo, 10));
         this.playerTwo.setMana(this.playerTwo.getMana() + Math.min(roundNo, 10));
     }
 
-    public void setWinner(int i) {
-
-    }
 }
 
 

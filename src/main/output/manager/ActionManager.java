@@ -14,6 +14,7 @@ import main.game.Game;
 import main.game.PlayerInfo;
 import main.output.ActionOutput;
 
+import javax.swing.*;
 import java.util.ArrayList;
 
 import static main.game.ActionCode.*;
@@ -55,31 +56,76 @@ class ActionManager {
             case ATTACK_CARD_COMMAND:
                 return attackCardAction(action.getCardAttacker(), action.getCardAttacked());
             case USE_CARD_ABILITY_COMMAND:
-                return  useAbilityAction(action.getCardAttacker(), action.getCardAttacked());
+                return useAbilityAction(action.getCardAttacker(), action.getCardAttacked());
             case USE_ENVIRONMENT_COMMAND:
                 return useEnvironmentAction(action.getHandIdx(), action.getAffectedRow());
             case GET_CARD_AT_INDEX_COMMAND:
                 return getCardAtIndexAction(action.getX(), action.getY());
             case ATTACK_HERO_COMMAND:
                 return attackHeroAction(action.getCardAttacker());
+            case USE_HERO_ABILITY_COMMAND:
+                return useHeroAbility(action.getAffectedRow());
+            case GAMES_PLAYED_COMMAND:
+                return getGamesPlayed();
+            case PLAYER_ONE_WINS_COMMAND:
+                return getPlayerWins(1);
+            case PLAYER_TWO_WINS_COMMAND:
+                return getPlayerWins(2);
             default:
                 return new ActionOutput(action.getCommand());
         }
     }
 
+    private ActionOutput getPlayerWins(int playerIdx) {
+        String playerWinsCmd = playerIdx == 1 ? PLAYER_ONE_WINS_COMMAND : PLAYER_TWO_WINS_COMMAND;
+        ActionOutput actionOutput = new ActionOutput(playerWinsCmd);
+        int playerWins = playerIdx == 1 ? Game.playerOneWins : Game.playerTwoWins;
+        actionOutput.setOutput(playerWins);
+        return actionOutput;
+    }
+
+    private ActionOutput getGamesPlayed() {
+        ActionOutput actionOutput = new ActionOutput(GAMES_PLAYED_COMMAND);
+        actionOutput.setOutput(Game.playerOneWins + Game.playerTwoWins);
+
+        return actionOutput;
+    }
+
+    private ActionOutput useHeroAbility(int affectedRow) {
+
+        PlayerInfo current_player = game.getPlayerTurn() == 1 ? game.getPlayerOne() : game.getPlayerTwo();
+        try {
+            current_player.useHeroAbility(game, affectedRow);
+            return new ActionOutput(EMPTY);
+        } catch (Exception exception) {
+            ActionOutput actionOutput = new ActionOutput(USE_HERO_ABILITY_COMMAND);
+            actionOutput.setAffectedRow(affectedRow);
+            actionOutput.setError(exception.getMessage());
+            return actionOutput;
+        }
+    }
+
     private ActionOutput attackHeroAction(Coordinates cardAttacker) {
         try {
-        Minion attacker = game.getBoard().get(cardAttacker.getX()).get(cardAttacker.getY());
+            Minion attacker = game.getBoard().get(cardAttacker.getX()).get(cardAttacker.getY());
             attacker.attackHero(game);
             return new ActionOutput(EMPTY);
         } catch (HeroDiedException e) {
+            int playerTurn = game.getPlayerTurn();
+            if (playerTurn == 1) {
+                Game.playerOneWins++;
+            }
+            else {
+                Game.playerTwoWins++;
+
+            }
             ActionOutput endGame = new ActionOutput();
             System.out.println(e.getMessage());
             endGame.setGameEnded(e.getMessage());
             return endGame;
         } catch (Exception e) {
 
-            return new ActionOutput(ATTACK_HERO_COMMAND, cardAttacker , e.getMessage());
+            return new ActionOutput(ATTACK_HERO_COMMAND, cardAttacker, e.getMessage());
         }
     }
 
@@ -124,6 +170,7 @@ class ActionManager {
             return new ActionOutput(GET_CARD_AT_INDEX_COMMAND, "No card available at that position.", x, y);
         }
     }
+
     public ActionOutput placeCardAction(int handIdx) {
 
         String error = null;
@@ -175,7 +222,7 @@ class ActionManager {
     public ActionOutput useEnvironmentAction(int handIdx, int affectedRow) {
         PlayerInfo player = game.getPlayerTurn() == 1 ? game.getPlayerOne() : game.getPlayerTwo();
 
-        String error = null;
+        String error;
 
         try {
             player.useEnvironmentCard(game, handIdx, affectedRow);
@@ -190,11 +237,14 @@ class ActionManager {
         if (game.getPlayerTurn() == 1) {
             game.getPlayerOne().setEndedTurn(true);
             game.setPlayerTurn(2);
+            game.getPlayerOne().getDeck().getHero().setUsedTurn(false);
 
             for (Minion minion : game.getBoard().get(3)) {
                 minion.setFrozen(false);
                 minion.setUsedTurn(false);
             }
+
+
 
             for (Minion minion : game.getBoard().get(2)) {
                 minion.setFrozen(false);
@@ -205,6 +255,7 @@ class ActionManager {
         } else {
             game.getPlayerTwo().setEndedTurn(true);
             game.setPlayerTurn(1);
+            game.getPlayerTwo().getDeck().getHero().setUsedTurn(false);
 
             for (Minion minion : game.getBoard().get(0)) {
                 minion.setFrozen(false);

@@ -23,8 +23,6 @@ public class TheCursedOne extends SpecialMinion implements BackRow {
         try {
             canAttack(game, x, y);
         } catch (Exception exception) {
-//            System.out.println("Error thrown from The Cursed One");
-
             throw new Exception(exception.getMessage());
         }
 

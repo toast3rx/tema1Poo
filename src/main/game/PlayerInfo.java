@@ -6,6 +6,7 @@ import main.cards.Card;
 import main.cards.enviroment.EnvironmentCard;
 import main.cards.minion.BackRow;
 import main.cards.minion.Minion;
+import main.heroes.Hero;
 
 import java.util.ArrayList;
 
@@ -95,6 +96,23 @@ public class PlayerInfo {
 
         }catch (Exception e){
             System.out.println("Deck is empty");
+        }
+    }
+
+    public void useHeroAbility(Game game, int rowIdx) throws Exception {
+        Hero hero  = getDeck().getHero();
+        if (hero.getMana() > getMana())
+            throw new Exception("Not enough mana to use hero's ability.");
+
+        if (hero.isUsedTurn())
+            throw new Exception("Hero has already attacked this turn.");
+
+        try {
+            hero.useAbility(game, rowIdx);
+            hero.setUsedTurn(true);
+            setMana(getMana() - hero.getMana());
+        } catch (Exception e) {
+            throw new Exception(e.getMessage());
         }
     }
 

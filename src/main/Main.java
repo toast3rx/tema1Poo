@@ -80,7 +80,8 @@ public final class Main {
 
         ArrayNode output = objectMapper.createArrayNode();
 
-
+        Game.playerTwoWins = 0;
+        Game.playerOneWins = 0;
         for (int i = 0; i < inputData.getGames().size(); i++) {
             GameInput gameInput = inputData.getGames().get(i);
             int deck1Index = gameInput.getStartGame().getPlayerOneDeckIdx();
@@ -96,12 +97,6 @@ public final class Main {
             Collections.shuffle(playerOneDeck, new Random(gameInput.getStartGame().getShuffleSeed()));
             Collections.shuffle(playerTwoDeck, new Random(gameInput.getStartGame().getShuffleSeed()));
 
-            // print playerTwoDeck cards
-//          for (Card card : playerTwoDeck) {
-//              System.out.println(card.getName() + " Mana: " + card.getMana());
-//                }
-
-
             Hero playerOneHero = GameUtils.getHero(gameInput.getStartGame().getPlayerOneHero());
             Hero playerTwoHero = GameUtils.getHero(gameInput.getStartGame().getPlayerTwoHero());
 
@@ -110,16 +105,12 @@ public final class Main {
             Deck deck1 = new Deck(playerOneDeck, playerOneHero);
             Deck deck2 = new Deck(playerTwoDeck, playerTwoHero);
 
-
-
-            PlayerInfo playerOne = new PlayerInfo(deck1, new ArrayList<Card>());
-            PlayerInfo playerTwo = new PlayerInfo(deck2, new ArrayList<Card>());
-
+            PlayerInfo playerOne = new PlayerInfo(deck1, new ArrayList<>());
+            PlayerInfo playerTwo = new PlayerInfo(deck2, new ArrayList<>());
 
             Game game = new Game(playerOne, playerTwo, playerTurn, gameInput.getActions());
 
             game.playGame(output);
-
         }
 
         //TODO add here the entry point to your implementation

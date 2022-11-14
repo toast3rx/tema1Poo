@@ -17,7 +17,6 @@ public class TheRipper extends SpecialMinion implements FrontRow {
         try {
             canAttack(game, x, y);
         } catch (Exception exception) {
-//            System.out.println("Error thrown from Ripper");
             throw new Exception(exception.getMessage());
         }
 
