@@ -7,8 +7,8 @@ import java.util.ArrayList;
 public class KingMudface extends Hero{
 
 
-    public KingMudface(String name, String description, String colors, int mana, int health) {
-        super(name, description, colors, mana, health);
+    public KingMudface(String name, String description, ArrayList<String> colors, int mana) {
+        super(name, description, colors, mana);
     }
 
     //  Earth Born: +1 viață pentru toate cărțile de pe rând.

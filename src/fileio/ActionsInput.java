@@ -1,5 +1,7 @@
 package fileio;
 
+
+
 public final class ActionsInput {
     private String command;
     private int handIdx;

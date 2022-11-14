@@ -1,51 +1,84 @@
 package main.game;
 
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import fileio.ActionsInput;
+import fileio.Coordinates;
+import lombok.Data;
+import main.Exceptions.InvalidPlacementException;
+import main.cards.Card;
+import main.cards.enviroment.EnvironmentCard;
 import main.cards.minion.Minion;
+import main.cards.minion.SpecialMinion.SpecialMinion;
+import main.output.*;
+import main.output.manager.ActionManager;
 
 import java.util.ArrayList;
 
+import static main.game.ActionCode.*;
+
+
+@Data
 public class Game {
+
+    public final int ROW_NUMBERS = 4;
+    public final int MAX_CARDS_ON_ROW = 5;
+
+    private PlayerInfo playerOne;
+    private PlayerInfo playerTwo;
+
     private ArrayList<ArrayList<Minion>> board;
-    private Deck player1Deck;
-    private Deck player2Deck;
-    int playerTurn;
+    private ArrayList<ActionsInput> actions;
+    private int playerTurn;
 
-    public ArrayList<ArrayList<Minion>> getBoard() {
-        return board;
-    }
+    private int roundNo = 0;
 
-    public void setBoard(ArrayList<ArrayList<Minion>> board) {
-        this.board = board;
-    }
 
-    public Deck getPlayer1Deck() {
-        return player1Deck;
-    }
-
-    public void setPlayer1Deck(Deck player1Deck) {
-        this.player1Deck = player1Deck;
-    }
-
-    public Deck getPlayer2Deck() {
-        return player2Deck;
-    }
-
-    public void setPlayer2Deck(Deck player2Deck) {
-        this.player2Deck = player2Deck;
-    }
-
-    public int getPlayerTurn() {
-        return playerTurn;
-    }
-
-    public void setPlayerTurn(int playerTurn) {
+    public Game(PlayerInfo playerOne, PlayerInfo playerTwo, int playerTurn, ArrayList<ActionsInput> actions) {
+        this.playerOne = playerOne;
+        this.playerTwo = playerTwo;
         this.playerTurn = playerTurn;
+        this.actions = actions;
+
+        this.board = new ArrayList<>();
+        for (int i = 0; i < ROW_NUMBERS; i++) {
+            this.board.add(new ArrayList<>());
+        }
     }
 
-    public Game(ArrayList<ArrayList<Minion>> board, Deck player1Deck, Deck player2Deck, int playerTurn) {
-        this.board = board;
-        this.player1Deck = player1Deck;
-        this.player2Deck = player2Deck;
-        this.playerTurn = playerTurn;
+
+    public void playGame(ArrayNode output) {
+
+        startNewRound();
+        ActionManager actionManager = new ActionManager(this);
+
+        for (ActionsInput action : actions) {
+            ActionOutput actionOutput = actionManager.manageAction(action, output);
+            if (actionOutput.getCommand().equals(EMPTY)) {
+                continue;
+            }
+            output.addPOJO(actionOutput);
+        }
+    }
+
+    public void startNewRound() {
+        this.roundNo++;
+
+        this.playerOne.setEndedTurn(false);
+        this.playerTwo.setEndedTurn(false);
+
+        this.playerOne.drawCard();
+        this.playerTwo.drawCard();
+
+
+        this.playerOne.setMana(this.playerOne.getMana() + Math.min(roundNo, 10));
+        this.playerTwo.setMana(this.playerTwo.getMana() + Math.min(roundNo, 10));
+    }
+
+    public void setWinner(int i) {
+
     }
 }
+
+
+
+

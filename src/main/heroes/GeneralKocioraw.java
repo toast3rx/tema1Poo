@@ -5,8 +5,10 @@ import main.cards.minion.Minion;
 import java.util.ArrayList;
 
 public class GeneralKocioraw extends Hero{
-    public GeneralKocioraw(String name, String description, String colors, int mana, int health) {
-        super(name, description, colors, mana, health);
+
+
+    public GeneralKocioraw(String name, String description, ArrayList<String> colors, int mana) {
+        super(name, description, colors, mana);
     }
 
     //Blood Thirst: +1 atac pentru toate cărțile de pe rând.

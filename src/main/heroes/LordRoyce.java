@@ -6,8 +6,9 @@ import java.util.ArrayList;
 
 public class LordRoyce extends Hero {
 
-    public LordRoyce(String name, String description, String colors, int mana, int health) {
-        super(name, description, colors, mana, health);
+
+    public LordRoyce(String name, String description, ArrayList<String> colors, int mana) {
+        super(name, description, colors, mana);
     }
 
     // Sub-Zero: îngheață cartea cu cel mai mare atac de pe rând.

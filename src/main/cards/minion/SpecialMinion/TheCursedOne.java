@@ -1,20 +1,43 @@
 package main.cards.minion.SpecialMinion;
 
+import main.cards.Card;
+import main.cards.minion.BackRow;
 import main.cards.minion.Minion;
+import main.game.Game;
+import main.game.PlayerInfo;
 
-public class TheCursedOne extends SpecialMinion {
-    public TheCursedOne(String name, int mana, String description, String colors, int attackDamage, boolean isFrozen, int health) {
-        super(name, mana, description, colors, attackDamage, isFrozen, health);
+import java.util.ArrayList;
+
+public class TheCursedOne extends SpecialMinion implements BackRow {
+    public TheCursedOne(String name, int mana, String description, ArrayList<String> colors, int attackDamage, int health) {
+        super(name, mana, description, colors, attackDamage, health);
     }
 
     /**
      * Swap targeted minion's health with attack damage
-     * @param targetedMinion
+     * @param
      */
     @Override
-    public void specialPower(Minion targetedMinion) {
-        int attack = targetedMinion.getAttackDamage();
-        targetedMinion.setAttackDamage(targetedMinion.getHealth());
-        targetedMinion.setHealth(attack);
+    public void useAbility(Game game, int x, int y) throws Exception {
+
+        try {
+            canAttack(game, x, y);
+        } catch (Exception exception) {
+//            System.out.println("Error thrown from The Cursed One");
+
+            throw new Exception(exception.getMessage());
+        }
+
+        Minion target = game.getBoard().get(x).get(y);
+
+        int attack = target.getAttackDamage();
+        target.setAttackDamage(target.getHealth());
+        target.setHealth(attack);
+
+        if (target.getHealth() <= 0) {
+            game.getBoard().get(x).remove(y);
+        }
+
+        usedTurn = true;
     }
 }
