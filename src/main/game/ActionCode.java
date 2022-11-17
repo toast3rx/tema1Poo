@@ -1,8 +1,10 @@
 package main.game;
 
-import fileio.StartGameInput;
+public final class ActionCode {
 
-public class ActionCode {
+    private ActionCode() {
+
+    }
 
     public static final String PLACE_CARD_COMMAND = "placeCard";
     public static final String END_TURN_COMMAND = "endPlayerTurn";

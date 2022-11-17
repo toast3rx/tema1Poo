@@ -18,49 +18,70 @@ public class PlayerInfo {
 
     private boolean endedTurn = false;
 
-    public PlayerInfo(Deck deck, ArrayList<Card> hand) {
+    public PlayerInfo(final Deck deck, final ArrayList<Card> hand) {
         this.deck = deck;
         this.hand = hand;
     }
 
-
-    public void useEnvironmentCard(Game game, int handIndex, int rowIndex) throws Exception {
+    /**
+     * Use an environment card from hand.
+     * @param game Game containing all the information.
+     * @param handIndex Index of the card in hand.
+     * @param rowIndex Index of the row that will be affected.
+     * @throws Exception If the card cannot be used
+     */
+    public void useEnvironmentCard(final Game game,
+                                   final int handIndex,
+                                   final int rowIndex) throws Exception {
         Card card = getHand().get(handIndex);
 
-        if (! (card instanceof EnvironmentCard environmentCard)) {
+        if (!(card instanceof EnvironmentCard environmentCard)) {
             throw new Exception("Chosen card is not of type environment.");
         }
 
-        if (card.getMana() > getMana())
+        if (card.getMana() > getMana()) {
             throw new Exception("Not enough mana to use environment card.");
+        }
 
 
         // get front row based on player
-        int frontRowIndex = game.getPlayerTurn() == 1 ? 2 : 1;
+        int frontRowIndex = game.getPlayerTurn() == 1
+                ? Game.PLAYER_ONE_FRONT_ROW
+                : Game.PLAYER_TWO_FRONT_ROW;
 
         //get back row based on player
-        int backRowIndex = game.getPlayerTurn() == 1 ? 3 : 0;
+        int backRowIndex = game.getPlayerTurn() == 1
+                ? Game.PLAYER_ONE_BACK_ROW
+                : Game.PLAYER_TWO_BACK_ROW;
 
-        if (rowIndex == frontRowIndex || rowIndex == backRowIndex)
+        if (rowIndex == frontRowIndex || rowIndex == backRowIndex) {
             throw new Exception("Chosen row does not belong to the enemy.");
+        }
 
         try {
             environmentCard.useAbility(game, rowIndex);
             getHand().remove(environmentCard);
             setMana(getMana() - card.getMana());
-        }
-        catch (Exception exception) {
+        } catch (Exception exception) {
             throw new Exception(exception.getMessage());
         }
 
     }
 
-    public void placeCard(Game game, int handIndex) throws InvalidPlacementException {
+    /**
+     * Place a minion on the board
+     * @param game Game containing all the information.
+     * @param handIndex Index of the card in hand.
+     * @throws InvalidPlacementException If the minion cannot be placed.
+     */
+    public void placeCard(final Game game,
+                          final int handIndex) throws InvalidPlacementException {
 
         Card card = getHand().get(handIndex);
 
-        if (card instanceof EnvironmentCard)
+        if (card instanceof EnvironmentCard) {
             throw new InvalidPlacementException("Cannot place environment card on table.");
+        }
 
         if (card.getMana() > this.getMana()) {
             throw new InvalidPlacementException("Not enough mana to place card on table.");
@@ -70,16 +91,19 @@ public class PlayerInfo {
 
 
         // get front row based on player
-        int frontRowIndex = game.getPlayerTurn() == 1 ? 2 : 1;
+        int frontRowIndex = game.getPlayerTurn() == 1
+                ? Game.PLAYER_ONE_FRONT_ROW
+                : Game.PLAYER_TWO_FRONT_ROW;
 
         //get back row based on player
-        int backRowIndex = game.getPlayerTurn() == 1 ? 3 : 0;
+        int backRowIndex = game.getPlayerTurn() == 1
+                ? Game.PLAYER_ONE_BACK_ROW
+                : Game.PLAYER_TWO_BACK_ROW;
 
         // get row based on card placement
         int rowIndex = card instanceof BackRow ? backRowIndex : frontRowIndex;
 
-        if (board.get(rowIndex).size() == game.MAX_CARDS_ON_ROW) {
-
+        if (board.get(rowIndex).size() == Game.MAX_CARDS_ON_ROW) {
             throw new InvalidPlacementException("Cannot place card on table since row is full.");
         }
 
@@ -88,24 +112,35 @@ public class PlayerInfo {
         hand.remove(handIndex);
     }
 
+    /**
+     * Draw a card from the deck in hand.
+     */
     public void drawCard() {
 
         try {
         Card card = deck.getCards().remove(0);
         hand.add(card);
 
-        }catch (Exception e){
+        } catch (Exception e) {
             System.out.println("Deck is empty");
         }
     }
 
-    public void useHeroAbility(Game game, int rowIdx) throws Exception {
+    /**
+     * Use hero special ability.
+     * @param game Game containing all the information.
+     * @param rowIdx Index of the row that will be affected.
+     * @throws Exception If the hero cannot use the ability.
+     */
+    public void useHeroAbility(final Game game, final int rowIdx) throws Exception {
         Hero hero  = getDeck().getHero();
-        if (hero.getMana() > getMana())
+        if (hero.getMana() > getMana()) {
             throw new Exception("Not enough mana to use hero's ability.");
+        }
 
-        if (hero.isUsedTurn())
+        if (hero.isUsedTurn()) {
             throw new Exception("Hero has already attacked this turn.");
+        }
 
         try {
             hero.useAbility(game, rowIdx);
@@ -116,12 +151,11 @@ public class PlayerInfo {
         }
     }
 
+    /**
+     * Get hand of cards
+     * @return ArrayList of cards
+     */
     public ArrayList<Card> getHand() {
         return this.hand;
-    }
-
-
-    public void setMana(int mana) {
-        this.mana = mana;
     }
 }

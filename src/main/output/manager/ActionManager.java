@@ -14,29 +14,65 @@ import main.game.Game;
 import main.game.PlayerInfo;
 import main.output.ActionOutput;
 
-import javax.swing.*;
 import java.util.ArrayList;
 
-import static main.game.ActionCode.*;
+import static main.game.ActionCode.ATTACK_CARD_COMMAND;
+import static main.game.ActionCode.ATTACK_HERO_COMMAND;
+import static main.game.ActionCode.EMPTY;
+import static main.game.ActionCode.END_TURN_COMMAND;
+import static main.game.ActionCode.GAMES_PLAYED_COMMAND;
+import static main.game.ActionCode.GET_CARDS_IN_HAND_COMMAND;
+import static main.game.ActionCode.GET_CARDS_ON_TABLE;
+import static main.game.ActionCode.GET_CARD_AT_INDEX_COMMAND;
+import static main.game.ActionCode.GET_ENVIRONMENT_CARDS_IN_HAND_COMMAND;
+import static main.game.ActionCode.GET_FROZEN_CARDS_COMMAND;
+import static main.game.ActionCode.GET_HERO_PLAYER_COMMAND;
+import static main.game.ActionCode.GET_PLAYER_DECK_COMMAND;
+import static main.game.ActionCode.GET_PLAYER_MANA_COMMAND;
+import static main.game.ActionCode.GET_PLAYER_TURN;
+import static main.game.ActionCode.PLACE_CARD_COMMAND;
+import static main.game.ActionCode.PLAYER_ONE_WINS_COMMAND;
+import static main.game.ActionCode.PLAYER_TWO_WINS_COMMAND;
+import static main.game.ActionCode.USE_CARD_ABILITY_COMMAND;
+import static main.game.ActionCode.USE_ENVIRONMENT_COMMAND;
+import static main.game.ActionCode.USE_HERO_ABILITY_COMMAND;
 
-public @Data
-class ActionManager {
+
+@Data
+public class ActionManager {
 
     private Game game;
 
-    public ActionManager(Game game) {
+    public ActionManager(final Game game) {
         this.game = game;
     }
 
-    public ActionOutput manageAction(ActionsInput action, ArrayNode output) {
+    /**
+     * Return output of the selected action.
+     * @param action The action to be executed.
+     * @param output Jackson ArrayNode to add the output to.
+     * @return The output of the action.
+     */
+    public ActionOutput manageAction(final ActionsInput action,
+                                     final ArrayNode output) {
 
         ActionOutput actionOutput = null;
 
         switch (action.getCommand()) {
             case GET_PLAYER_DECK_COMMAND:
-                return new ActionOutput(action.getCommand(), action.getPlayerIdx() == 1 ? game.getPlayerOne().getDeck().getCards() : game.getPlayerTwo().getDeck().getCards(), action.getPlayerIdx());
+                PlayerInfo player = action.getPlayerIdx() == 1
+                        ? game.getPlayerOne()
+                        : game.getPlayerTwo();
+                return new ActionOutput(action.getCommand(),
+                        player.getDeck().getCards(),
+                        action.getPlayerIdx());
             case GET_HERO_PLAYER_COMMAND:
-                return new ActionOutput(action.getCommand(), action.getPlayerIdx(), action.getPlayerIdx() == 1 ? game.getPlayerOne().getDeck().getHero() : game.getPlayerTwo().getDeck().getHero());
+                player = action.getPlayerIdx() == 1
+                        ? game.getPlayerOne()
+                        : game.getPlayerTwo();
+                return new ActionOutput(action.getCommand(),
+                        action.getPlayerIdx(),
+                        player.getDeck().getHero());
             case GET_PLAYER_TURN:
                 return new ActionOutput(action.getCommand(), game.getPlayerTurn());
             case PLACE_CARD_COMMAND:
@@ -44,9 +80,15 @@ class ActionManager {
             case END_TURN_COMMAND:
                 return endTurnAction();
             case GET_CARDS_IN_HAND_COMMAND:
-                return new ActionOutput(action.getCommand(), action.getPlayerIdx() == 1 ? game.getPlayerOne().getHand() : game.getPlayerTwo().getHand(), action.getPlayerIdx());
+                player = action.getPlayerIdx() == 1 ? game.getPlayerOne() : game.getPlayerTwo();
+                return new ActionOutput(action.getCommand(),
+                        player.getHand(),
+                        action.getPlayerIdx());
             case GET_PLAYER_MANA_COMMAND:
-                return new ActionOutput(action.getCommand(), action.getPlayerIdx() == 1 ? game.getPlayerOne().getMana() : game.getPlayerTwo().getMana(), action.getPlayerIdx());
+                player = action.getPlayerIdx() == 1 ? game.getPlayerOne() : game.getPlayerTwo();
+                return new ActionOutput(action.getCommand(),
+                        player.getMana(),
+                        action.getPlayerIdx());
             case GET_CARDS_ON_TABLE:
                 return new ActionOutput(action.getCommand(), game.getBoard());
             case GET_ENVIRONMENT_CARDS_IN_HAND_COMMAND:
@@ -76,26 +118,42 @@ class ActionManager {
         }
     }
 
-    private ActionOutput getPlayerWins(int playerIdx) {
+    /**
+     * Get the number of wins for a player.
+     * @param playerIdx The player index.
+     * @return The number of wins.
+     */
+    private ActionOutput getPlayerWins(final int playerIdx) {
         String playerWinsCmd = playerIdx == 1 ? PLAYER_ONE_WINS_COMMAND : PLAYER_TWO_WINS_COMMAND;
         ActionOutput actionOutput = new ActionOutput(playerWinsCmd);
-        int playerWins = playerIdx == 1 ? Game.playerOneWins : Game.playerTwoWins;
+        int playerWins = playerIdx == 1 ? Game.getPlayerOneWins() : Game.getPlayerTwoWins();
         actionOutput.setOutput(playerWins);
         return actionOutput;
     }
 
+    /** Get the number of games played.
+     *
+     * @return The number of games played.
+     */
     private ActionOutput getGamesPlayed() {
         ActionOutput actionOutput = new ActionOutput(GAMES_PLAYED_COMMAND);
-        actionOutput.setOutput(Game.playerOneWins + Game.playerTwoWins);
+        actionOutput.setOutput(Game.getPlayerOneWins() + Game.getPlayerTwoWins());
 
         return actionOutput;
     }
 
-    private ActionOutput useHeroAbility(int affectedRow) {
+    /**
+     * Use the hero ability on the specified row
+     * @param affectedRow The row to use the ability on.
+     * @return The output of the action.
+     */
+    private ActionOutput useHeroAbility(final int affectedRow) {
 
-        PlayerInfo current_player = game.getPlayerTurn() == 1 ? game.getPlayerOne() : game.getPlayerTwo();
+        PlayerInfo currentPlayer = game.getPlayerTurn() == 1
+                ? game.getPlayerOne()
+                : game.getPlayerTwo();
         try {
-            current_player.useHeroAbility(game, affectedRow);
+            currentPlayer.useHeroAbility(game, affectedRow);
             return new ActionOutput(EMPTY);
         } catch (Exception exception) {
             ActionOutput actionOutput = new ActionOutput(USE_HERO_ABILITY_COMMAND);
@@ -105,7 +163,12 @@ class ActionManager {
         }
     }
 
-    private ActionOutput attackHeroAction(Coordinates cardAttacker) {
+    /**
+     * Attack the hero of the opponent.
+     * @param cardAttacker The card that is attacking.
+     * @return The output of the action.
+     */
+    private ActionOutput attackHeroAction(final Coordinates cardAttacker) {
         try {
             Minion attacker = game.getBoard().get(cardAttacker.getX()).get(cardAttacker.getY());
             attacker.attackHero(game);
@@ -113,10 +176,9 @@ class ActionManager {
         } catch (HeroDiedException e) {
             int playerTurn = game.getPlayerTurn();
             if (playerTurn == 1) {
-                Game.playerOneWins++;
-            }
-            else {
-                Game.playerTwoWins++;
+                Game.setPlayerOneWins(Game.getPlayerOneWins() + 1);
+            } else {
+                Game.setPlayerTwoWins(Game.getPlayerTwoWins() + 1);
 
             }
             ActionOutput endGame = new ActionOutput();
@@ -129,6 +191,10 @@ class ActionManager {
         }
     }
 
+    /**
+     * Get all frozen cards from board
+     * @return The output of the action.
+     */
     private ActionOutput getFrozenCardOnTable() {
         ArrayList<Minion> frozenCards = new ArrayList<>();
         for (ArrayList<Minion> row : game.getBoard()) {
@@ -141,7 +207,12 @@ class ActionManager {
         return new ActionOutput(GET_FROZEN_CARDS_COMMAND, frozenCards);
     }
 
-    private ActionOutput getEnvironmentCardsInHand(int playerIdx) {
+    /**
+     * Get the environment cards from a player's hand.
+     * @param playerIdx The player index.
+     * @return The output of the action.
+     */
+    private ActionOutput getEnvironmentCardsInHand(final int playerIdx) {
         ArrayList<Card> environmentCards = new ArrayList<>();
 
         if (playerIdx == 1) {
@@ -158,20 +229,36 @@ class ActionManager {
             }
         }
 
-        return new ActionOutput(GET_ENVIRONMENT_CARDS_IN_HAND_COMMAND, environmentCards, playerIdx);
+        return new ActionOutput(GET_ENVIRONMENT_CARDS_IN_HAND_COMMAND,
+                environmentCards,
+                playerIdx);
     }
 
-    public ActionOutput getCardAtIndexAction(int x, int y) {
+    /**
+     * Get the card at the specified coordinates from board.
+     * @param x The x coordinate.
+     * @param y The y coordinate.
+     * @return The output of the action.
+     */
+    public ActionOutput getCardAtIndexAction(final int x, final int y) {
 
         try {
             Minion minion = game.getBoard().get(x).get(y);
             return new ActionOutput(GET_CARD_AT_INDEX_COMMAND, x, y, minion);
         } catch (IndexOutOfBoundsException exception) {
-            return new ActionOutput(GET_CARD_AT_INDEX_COMMAND, "No card available at that position.", x, y);
+            return new ActionOutput(GET_CARD_AT_INDEX_COMMAND,
+                    "No card available at that position.",
+                    x,
+                    y);
         }
     }
 
-    public ActionOutput placeCardAction(int handIdx) {
+    /**
+     * Place a card on the board
+     * @param handIdx The index of the card in the hand.
+     * @return The output of the action.
+     */
+    public ActionOutput placeCardAction(final int handIdx) {
 
         String error = null;
 
@@ -191,7 +278,14 @@ class ActionManager {
         return new ActionOutput(PLACE_CARD_COMMAND, handIdx, error);
     }
 
-    public ActionOutput attackCardAction(Coordinates cardAttacker, Coordinates cardAttacked) {
+    /**
+     * Attack an opponent's minion.
+     * @param cardAttacker The card that is attacking.
+     * @param cardAttacked The card that is being attacked.
+     * @return The output of the action.
+     */
+    public ActionOutput attackCardAction(final Coordinates cardAttacker,
+                                         final Coordinates cardAttacked) {
         String error = "";
 
         Minion minionAttacker = game.getBoard().get(cardAttacker.getX()).get(cardAttacker.getY());
@@ -205,10 +299,18 @@ class ActionManager {
         }
     }
 
-    public ActionOutput useAbilityAction(Coordinates cardAttacker, Coordinates cardAttacked) {
+    /**
+     * Use a card's ability.
+     * @param cardAttacker The card that is using the ability.
+     * @param cardAttacked The card that is being affected by the ability.
+     * @return The output of the action.
+     */
+    public ActionOutput useAbilityAction(final Coordinates cardAttacker,
+                                         final Coordinates cardAttacked) {
         String error = "";
 
-        SpecialMinion minionAttacker = (SpecialMinion) game.getBoard().get(cardAttacker.getX()).get(cardAttacker.getY());
+        SpecialMinion minionAttacker =
+                (SpecialMinion) game.getBoard().get(cardAttacker.getX()).get(cardAttacker.getY());
 
         try {
             minionAttacker.useAbility(game, cardAttacked.getX(), cardAttacked.getY());
@@ -219,7 +321,13 @@ class ActionManager {
         }
     }
 
-    public ActionOutput useEnvironmentAction(int handIdx, int affectedRow) {
+    /**
+     * Use an environment card from hand
+     * @param handIdx The index of the card in the hand.
+     * @param affectedRow The row that is affected by the card.
+     * @return The output of the action.
+     */
+    public ActionOutput useEnvironmentAction(final int handIdx, final int affectedRow) {
         PlayerInfo player = game.getPlayerTurn() == 1 ? game.getPlayerOne() : game.getPlayerTwo();
 
         String error;
@@ -233,20 +341,23 @@ class ActionManager {
         }
     }
 
+    /**
+     * End a player's turn.
+     * @return The output of the action.
+     */
     public ActionOutput endTurnAction() {
         if (game.getPlayerTurn() == 1) {
             game.getPlayerOne().setEndedTurn(true);
             game.setPlayerTurn(2);
             game.getPlayerOne().getDeck().getHero().setUsedTurn(false);
 
-            for (Minion minion : game.getBoard().get(3)) {
+            for (Minion minion : game.getBoard().get(Game.PLAYER_ONE_BACK_ROW)) {
                 minion.setFrozen(false);
                 minion.setUsedTurn(false);
             }
 
 
-
-            for (Minion minion : game.getBoard().get(2)) {
+            for (Minion minion : game.getBoard().get(Game.PLAYER_ONE_FRONT_ROW)) {
                 minion.setFrozen(false);
                 minion.setUsedTurn(false);
             }
@@ -257,12 +368,12 @@ class ActionManager {
             game.setPlayerTurn(1);
             game.getPlayerTwo().getDeck().getHero().setUsedTurn(false);
 
-            for (Minion minion : game.getBoard().get(0)) {
+            for (Minion minion : game.getBoard().get(Game.PLAYER_TWO_BACK_ROW)) {
                 minion.setFrozen(false);
                 minion.setUsedTurn(false);
             }
 
-            for (Minion minion : game.getBoard().get(1)) {
+            for (Minion minion : game.getBoard().get(Game.PLAYER_TWO_FRONT_ROW)) {
                 minion.setFrozen(false);
                 minion.setUsedTurn(false);
             }
@@ -275,4 +386,3 @@ class ActionManager {
         return new ActionOutput(EMPTY);
     }
 }
-

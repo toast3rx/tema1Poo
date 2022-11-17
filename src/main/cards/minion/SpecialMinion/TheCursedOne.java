@@ -1,24 +1,29 @@
 package main.cards.minion.SpecialMinion;
 
-import main.cards.Card;
 import main.cards.minion.BackRow;
 import main.cards.minion.Minion;
 import main.game.Game;
-import main.game.PlayerInfo;
-
 import java.util.ArrayList;
 
 public class TheCursedOne extends SpecialMinion implements BackRow {
-    public TheCursedOne(String name, int mana, String description, ArrayList<String> colors, int attackDamage, int health) {
+    public TheCursedOne(final String name,
+                        final int mana,
+                        final String description,
+                        final ArrayList<String> colors,
+                        final int attackDamage,
+                        final int health) {
         super(name, mana, description, colors, attackDamage, health);
     }
 
     /**
-     * Swap targeted minion's health with attack damage
-     * @param
+     * Swap targeted minion's attack and health.
+     * @param game The game containing all the information.
+     * @param x The x coordinate of the target.
+     * @param y The y coordinate of the target.
+     * @throws Exception If the ability can't be used.
      */
     @Override
-    public void useAbility(Game game, int x, int y) throws Exception {
+    public void useAbility(final Game game, final int x, final int y) throws Exception {
 
         try {
             canAttack(game, x, y);

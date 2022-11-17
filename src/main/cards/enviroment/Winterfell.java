@@ -2,21 +2,23 @@ package main.cards.enviroment;
 
 import main.cards.minion.Minion;
 import main.game.Game;
-
 import java.util.ArrayList;
 
-public class Winterfell extends EnvironmentCard{
-    public Winterfell(String name, int mana, String description, ArrayList<String> colors) {
+public class Winterfell extends EnvironmentCard {
+    public Winterfell(final String name,
+                      final int mana,
+                      final String description,
+                      final ArrayList<String> colors) {
         super(name, mana, description, colors);
     }
 
     /**
-     * All cards from row are frozen
-     * @param game
-     * @param row
+     * Freeze all enemy minions from targeted row
+     * @param game The game containing all the information
+     * @param row The row card will affect
      */
     @Override
-    public void useAbility(Game game, int row) {
+    public void useAbility(final Game game, final int row) {
         for (Minion minion : game.getBoard().get(row)) {
             minion.setFrozen(true);
         }

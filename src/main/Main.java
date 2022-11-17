@@ -7,7 +7,6 @@ import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import checker.CheckerConstants;
 import fileio.CardInput;
-import fileio.DecksInput;
 import fileio.GameInput;
 import fileio.Input;
 import main.cards.Card;
@@ -16,15 +15,15 @@ import main.game.Game;
 import main.game.PlayerInfo;
 import main.heroes.Hero;
 import main.utils.GameUtils;
-
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.text.CollationElementIterator;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Objects;
+import java.util.Random;
 
 /**
  * The entry point to this homework. It runs the checker that tests your implentation.
@@ -80,25 +79,31 @@ public final class Main {
 
         ArrayNode output = objectMapper.createArrayNode();
 
-        Game.playerTwoWins = 0;
-        Game.playerOneWins = 0;
+        Game.setPlayerOneWins(0);
+        Game.setPlayerTwoWins(0);
         for (int i = 0; i < inputData.getGames().size(); i++) {
             GameInput gameInput = inputData.getGames().get(i);
             int deck1Index = gameInput.getStartGame().getPlayerOneDeckIdx();
             int deck2Index = gameInput.getStartGame().getPlayerTwoDeckIdx();
 
-            ArrayList<CardInput> deckFirstPlayer = inputData.getPlayerOneDecks().getDecks().get(deck1Index);
-            ArrayList<CardInput> deckSecondPlayer = inputData.getPlayerTwoDecks().getDecks().get(deck2Index);
+            ArrayList<CardInput> deckFirstPlayer =
+                    inputData.getPlayerOneDecks().getDecks().get(deck1Index);
+            ArrayList<CardInput> deckSecondPlayer =
+                    inputData.getPlayerTwoDecks().getDecks().get(deck2Index);
 
 
             ArrayList<Card> playerOneDeck = GameUtils.cardsInputToCards(deckFirstPlayer);
             ArrayList<Card> playerTwoDeck = GameUtils.cardsInputToCards(deckSecondPlayer);
 
-            Collections.shuffle(playerOneDeck, new Random(gameInput.getStartGame().getShuffleSeed()));
-            Collections.shuffle(playerTwoDeck, new Random(gameInput.getStartGame().getShuffleSeed()));
+            Collections.shuffle(playerOneDeck,
+                    new Random(gameInput.getStartGame().getShuffleSeed()));
+            Collections.shuffle(playerTwoDeck,
+                    new Random(gameInput.getStartGame().getShuffleSeed()));
 
-            Hero playerOneHero = GameUtils.getHero(gameInput.getStartGame().getPlayerOneHero());
-            Hero playerTwoHero = GameUtils.getHero(gameInput.getStartGame().getPlayerTwoHero());
+            Hero playerOneHero =
+                    GameUtils.getHero(gameInput.getStartGame().getPlayerOneHero());
+            Hero playerTwoHero =
+                    GameUtils.getHero(gameInput.getStartGame().getPlayerTwoHero());
 
             int playerTurn = gameInput.getStartGame().getStartingPlayer();
 
@@ -108,12 +113,14 @@ public final class Main {
             PlayerInfo playerOne = new PlayerInfo(deck1, new ArrayList<>());
             PlayerInfo playerTwo = new PlayerInfo(deck2, new ArrayList<>());
 
-            Game game = new Game(playerOne, playerTwo, playerTurn, gameInput.getActions());
+            Game game = new Game(playerOne,
+                    playerTwo,
+                    playerTurn,
+                    gameInput.getActions());
 
             game.playGame(output);
         }
 
-        //TODO add here the entry point to your implementation
 
         ObjectWriter objectWriter = objectMapper.writerWithDefaultPrettyPrinter();
         objectWriter.writeValue(new File(filePath2), output);

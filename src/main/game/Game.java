@@ -2,30 +2,30 @@ package main.game;
 
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import fileio.ActionsInput;
-import fileio.Coordinates;
 import lombok.Data;
-import main.Exceptions.InvalidPlacementException;
-import main.cards.Card;
-import main.cards.enviroment.EnvironmentCard;
 import main.cards.minion.Minion;
-import main.cards.minion.SpecialMinion.SpecialMinion;
-import main.output.*;
+import main.output.ActionOutput;
 import main.output.manager.ActionManager;
-
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-
-import static main.game.ActionCode.*;
-
 
 @Data
 public class Game {
 
-    public static int playerOneWins = 0;
-    public static int playerTwoWins = 0;
+    private static int playerOneWins = 0;
+    private static int playerTwoWins = 0;
 
-    public final int ROW_NUMBERS = 4;
-    public final int MAX_CARDS_ON_ROW = 5;
+    public static final int ROW_NUMBERS = 4;
+    public static final int MAX_CARDS_ON_ROW = 5;
+
+    public static final int PLAYER_ONE_FRONT_ROW = 2;
+    public static final int PLAYER_ONE_BACK_ROW = 3;
+
+    public static final int PLAYER_TWO_FRONT_ROW = 1;
+    public static final int PLAYER_TWO_BACK_ROW = 0;
+
+    public static final int HERO_HEALTH = 30;
+
+    public static final int MAX_MANA = 10;
 
     private PlayerInfo playerOne;
     private PlayerInfo playerTwo;
@@ -37,7 +37,10 @@ public class Game {
     private int roundNo = 0;
 
 
-    public Game(PlayerInfo playerOne, PlayerInfo playerTwo, int playerTurn, ArrayList<ActionsInput> actions) {
+    public Game(final PlayerInfo playerOne,
+                final PlayerInfo playerTwo,
+                final int playerTurn,
+                final ArrayList<ActionsInput> actions) {
         this.playerOne = playerOne;
         this.playerTwo = playerTwo;
         this.playerTurn = playerTurn;
@@ -49,8 +52,28 @@ public class Game {
         }
     }
 
+    public static int getPlayerOneWins() {
+        return playerOneWins;
+    }
 
-    public void playGame(ArrayNode output) {
+    public static void setPlayerOneWins(final int playerOneWins) {
+        Game.playerOneWins = playerOneWins;
+    }
+
+    public static int getPlayerTwoWins() {
+        return playerTwoWins;
+    }
+
+    public static void setPlayerTwoWins(final int playerTwoWins) {
+        Game.playerTwoWins = playerTwoWins;
+    }
+
+
+    /**
+     * Start a new game.
+     * @param output jackson array node for printing the output
+     */
+    public void playGame(final ArrayNode output) {
 
         startNewRound();
         ActionManager actionManager = new ActionManager(this);
@@ -58,7 +81,8 @@ public class Game {
         for (ActionsInput action : actions) {
             ActionOutput actionOutput = actionManager.manageAction(action, output);
 
-            if ((actionOutput.getGameEnded() == null) && actionOutput.getCommand().equals(EMPTY)) {
+            if ((actionOutput.getGameEnded() == null)
+                    && actionOutput.getCommand().equals(ActionCode.EMPTY)) {
                 continue;
             }
 
@@ -66,6 +90,9 @@ public class Game {
         }
     }
 
+    /**
+     * Start a new round in current game
+     */
     public void startNewRound() {
         this.roundNo++;
 
@@ -76,12 +103,8 @@ public class Game {
         this.playerOne.drawCard();
         this.playerTwo.drawCard();
 
-        this.playerOne.setMana(this.playerOne.getMana() + Math.min(roundNo, 10));
-        this.playerTwo.setMana(this.playerTwo.getMana() + Math.min(roundNo, 10));
+        this.playerOne.setMana(this.playerOne.getMana() + Math.min(roundNo, MAX_MANA));
+        this.playerTwo.setMana(this.playerTwo.getMana() + Math.min(roundNo, MAX_MANA));
     }
 
 }
-
-
-
-

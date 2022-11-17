@@ -2,8 +2,13 @@ package main.cards.minion;
 
 import java.util.ArrayList;
 
-public class Sentinel extends Minion implements BackRow{
-    public Sentinel(String name, int mana, String description, ArrayList<String> colors, int attackDamage, int health) {
+public class Sentinel extends Minion implements BackRow {
+    public Sentinel(final String name,
+                    final int mana,
+                    final String description,
+                    final ArrayList<String> colors,
+                    final int attackDamage,
+                    final int health) {
         super(name, mana, description, colors, attackDamage, health);
     }
 }

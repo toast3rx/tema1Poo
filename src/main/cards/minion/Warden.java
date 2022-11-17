@@ -2,8 +2,13 @@ package main.cards.minion;
 
 import java.util.ArrayList;
 
-public class Warden extends Minion implements Tank, FrontRow{
-    public Warden(String name, int mana, String description, ArrayList<String> colors, int attackDamage, int health) {
+public class Warden extends Minion implements Tank, FrontRow {
+    public Warden(final String name,
+                  final int mana,
+                  final String description,
+                  final ArrayList<String> colors,
+                  final int attackDamage,
+                  final int health) {
         super(name, mana, description, colors, attackDamage, health);
     }
 }

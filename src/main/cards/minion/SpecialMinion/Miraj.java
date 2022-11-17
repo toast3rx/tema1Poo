@@ -9,22 +9,28 @@ import java.util.ArrayList;
 public class Miraj extends SpecialMinion implements FrontRow {
 
 
-    public Miraj(String name, int mana, String description, ArrayList<String> colors, int attackDamage, int health) {
+    public Miraj(final String name,
+                 final int mana,
+                 final String description,
+                 final ArrayList<String> colors,
+                 final int attackDamage,
+                 final int health) {
         super(name, mana, description, colors, attackDamage, health);
     }
 
     /**
-     * Swap this card health with the targeted minion
-     * @param
+     * Swap the health of the targeted minion with the health of this minion
+     * @param game The game containing all the information
+     * @param x The x coordinate of the minion
+     * @param y The y coordinate of the minion
+     * @throws Exception If the ability cannot be used
      */
     @Override
-    public void useAbility(Game game, int x, int y) throws Exception {
+    public void useAbility(final Game game, final int x, final int y) throws Exception {
 
         try {
             canAttack(game, x, y);
         } catch (Exception exception) {
-//            System.out.println("Error thrown from Miraj");
-
             throw new Exception(exception.getMessage());
         }
 

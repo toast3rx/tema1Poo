@@ -7,20 +7,33 @@ import main.game.Game;
 import java.util.ArrayList;
 
 @Data
-public class EmpressThorina extends Hero{
+public class EmpressThorina extends Hero {
 
 
-    public EmpressThorina(String name, String description, ArrayList<String> colors, int mana) {
+    public EmpressThorina(final String name,
+                          final String description,
+                          final ArrayList<String> colors,
+                          final int mana) {
         super(name, description, colors, mana);
     }
 
-    //   Low Blow: distruge cartea cu cea mai mare viață de pe rând.
+
+    /**
+     * Destroy the card with the highest health on the row.
+     * @param game Game containing all the information.
+     * @param rowIdx Row index.
+     * @throws Exception If the ability cannot be applied.
+     */
     @Override
-    public void useAbility(Game game, int rowIdx) throws Exception {
+    public void useAbility(final Game game, final int rowIdx) throws Exception {
         ArrayList<Minion> selectedRow = game.getBoard().get(rowIdx);
 
-        int backRow = game.getPlayerTurn() == 1 ? 3 : 0;
-        int frontRow = game.getPlayerTurn() == 1 ? 2 : 1;
+        int backRow = game.getPlayerTurn() == 1
+                ? Game.PLAYER_ONE_BACK_ROW
+                : Game.PLAYER_TWO_BACK_ROW;
+        int frontRow = game.getPlayerTurn() == 1
+                ? Game.PLAYER_ONE_FRONT_ROW
+                : Game.PLAYER_TWO_FRONT_ROW;
 
         if (rowIdx == backRow || rowIdx == frontRow) {
             throw new Exception("Selected row does not belong to the enemy.");

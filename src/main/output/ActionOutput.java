@@ -2,10 +2,12 @@ package main.output;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import fileio.Coordinates;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import main.cards.Card;
 import main.cards.minion.Minion;
-import main.heroes.EmpressThorina;
 import main.heroes.Hero;
 
 import java.util.ArrayList;
@@ -44,7 +46,10 @@ public class ActionOutput {
     /**
      * Constructor for Card Attack Command
      */
-    public ActionOutput(String command, Coordinates cardAttacker, Coordinates cardAttacked, String error) {
+    public ActionOutput(final String command,
+                        final Coordinates cardAttacker,
+                        final Coordinates cardAttacked,
+                        final String error) {
         this.command = command;
         this.cardAttacker = new Coordinates();
         this.cardAttacker.setX(cardAttacker.getX());
@@ -57,7 +62,9 @@ public class ActionOutput {
         this.error = error;
     }
 
-    public ActionOutput(String command, Coordinates cardAttacker, String error) {
+    public ActionOutput(final String command,
+                        final Coordinates cardAttacker,
+                        final String error) {
         this.command = command;
         this.cardAttacker = new Coordinates();
         this.cardAttacker.setX(cardAttacker.getX());
@@ -66,18 +73,20 @@ public class ActionOutput {
         this.error = error;
     }
 
-    public ActionOutput(String command) {
+    public ActionOutput(final String command) {
         this.command = command;
     }
 
-    public ActionOutput(String command, ArrayList<Card> output, Integer playerIdx) {
+    public ActionOutput(final String command,
+                        final ArrayList<Card> output,
+                        final Integer playerIdx) {
         this.command = command;
         this.playerIdx = playerIdx;
 
         this.output = new ArrayList<Card>();
         for (Card card : output) {
             if (card instanceof Minion) {
-                ((ArrayList) this.output).add(new Minion((Minion) card));
+                ((ArrayList) this.output).add( ((Minion) card).clone());
             } else {
                 ((ArrayList) this.output).add(card);
             }
@@ -87,39 +96,42 @@ public class ActionOutput {
     /**
      * Constructor for Minion output
      */
-    public ActionOutput(String command, Minion output) {
+    public ActionOutput(final String command, final Minion output) {
         this.command = command;
-        this.output = new Minion(output);
+        this.output = output.clone();
     }
-
-//    public ActionOutput(ActionOutput actionOutput) {
-//        this.command = actionOutput.getCommand();
-//    }
 
 
     /**
      * Constructor for Using Environment Card
      */
-    public ActionOutput(String command, int handIdx, int affectedRow, String error) {
+    public ActionOutput(final String command,
+                        final int handIdx,
+                        final int affectedRow,
+                        final String error) {
         this.command = command;
         this.handIdx = handIdx;
         this.affectedRow = affectedRow;
         this.error = error;
     }
 
-    public ActionOutput(String command, Integer output) {
+    public ActionOutput(final String command, final Integer output) {
         this.command = command;
         this.output = output;
     }
 
     /** Constructor for get player mana command */
-    public ActionOutput(String command, Integer mana, Integer playerIdx) {
+    public ActionOutput(final String command,
+                        final Integer mana,
+                        final Integer playerIdx) {
         this.command = command;
         this.output = mana;
         this.playerIdx = playerIdx;
     }
 
-    public ActionOutput(String command, Integer playerIdx, Hero output) {
+    public ActionOutput(final String command,
+                        final Integer playerIdx,
+                        final Hero output) {
         this.command = command;
         this.playerIdx = playerIdx;
 
@@ -127,31 +139,36 @@ public class ActionOutput {
     }
 
     /** Constructor for place card action */
-    public ActionOutput(String command, Integer handIdx, String error) {
+    public ActionOutput(final String command,
+                        final Integer handIdx,
+                        final String error) {
         this.command = command;
         this.handIdx = handIdx;
         this.error = error;
     }
 
-    public ActionOutput(String command, String output, int x, int y){
+    public ActionOutput(final String command,
+                        final String output,
+                        final int x,
+                        final int y) {
         this.command = command;
         this.x = x;
         this.y = y;
         this.output = output;
     }
-    public ActionOutput(String command, Integer x, Integer y, Minion output) {
+    public ActionOutput(final String command,
+                        final Integer x,
+                        final Integer y,
+                        final Minion output) {
         this.command = command;
         this.x = x;
         this.y = y;
-        this.output = new Minion(output);
+        this.output = output.clone();
     }
     /**
      * Constructor for showing the cards on the table
-     *
-     * @param command
-     * @param output
      */
-    public ActionOutput(String command, ArrayList<?> output) {
+    public ActionOutput(final String command,  final ArrayList<?> output) {
         this.command = command;
 
         this.output = new ArrayList<>(output);
