@@ -1,5 +1,2 @@
 Starting audit...
-[ERROR] D:\ProgrammingProjects\OOP_Tema1\tema\.\src\main\cards\minion\Minion.java:18:63: '{' is not preceded with whitespace. [WhitespaceAround]
-[ERROR] D:\ProgrammingProjects\OOP_Tema1\tema\.\src\main\output\ActionOutput.java:89:46: '(' is followed by whitespace. [ParenPad]
 Audit done.
-Checkstyle ends with 2 errors.

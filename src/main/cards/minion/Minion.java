@@ -15,7 +15,7 @@ import java.util.ArrayList;
 @Data
 @JsonIgnoreProperties({"frozen", "usedTurn"})
 @JsonPropertyOrder({"mana", "attackDamage", "health", "description", "colors", "name"})
-public abstract class Minion extends Card implements Cloneable{
+public abstract class Minion extends Card implements Cloneable {
     protected int attackDamage;
 
     protected boolean usedTurn;

@@ -86,7 +86,7 @@ public class ActionOutput {
         this.output = new ArrayList<Card>();
         for (Card card : output) {
             if (card instanceof Minion) {
-                ((ArrayList) this.output).add( ((Minion) card).clone());
+                ((ArrayList) this.output).add(((Minion) card).clone());
             } else {
                 ((ArrayList) this.output).add(card);
             }
