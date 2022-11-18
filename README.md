@@ -7,7 +7,7 @@
 
 
 ## Card structure
-<img style="float:right" src="Diagrams/CardDiagram.png" />
+<img style="float:right" src="Diagrams/CardDiagram.png"/>
 
 * **Tank** interface - _marking_ interface showing that a card is a tank,\
 meaning that it will protect the other cards from attacks and spells.
