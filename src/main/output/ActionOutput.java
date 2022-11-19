@@ -6,9 +6,9 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import main.cards.Card;
-import main.cards.minion.Minion;
-import main.heroes.Hero;
+import main.card.Card;
+import main.card.minion.Minion;
+import main.hero.Hero;
 
 import java.util.ArrayList;
 

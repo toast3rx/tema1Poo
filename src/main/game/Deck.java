@@ -1,8 +1,8 @@
 package main.game;
 
 import lombok.Data;
-import main.cards.Card;
-import main.heroes.Hero;
+import main.card.Card;
+import main.hero.Hero;
 import java.util.ArrayList;
 
 @Data

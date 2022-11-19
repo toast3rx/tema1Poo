@@ -3,7 +3,7 @@ package main.game;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import fileio.ActionsInput;
 import lombok.Data;
-import main.cards.minion.Minion;
+import main.card.minion.Minion;
 import main.output.ActionOutput;
 import main.output.manager.ActionManager;
 import java.util.ArrayList;

@@ -4,12 +4,12 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import fileio.ActionsInput;
 import fileio.Coordinates;
 import lombok.Data;
-import main.Exceptions.HeroDiedException;
-import main.Exceptions.InvalidPlacementException;
-import main.cards.Card;
-import main.cards.enviroment.EnvironmentCard;
-import main.cards.minion.Minion;
-import main.cards.minion.SpecialMinion.SpecialMinion;
+import main.exception.HeroDiedException;
+import main.exception.InvalidPlacementException;
+import main.card.Card;
+import main.card.enviroment.EnvironmentCard;
+import main.card.minion.Minion;
+import main.card.minion.SpecialMinion.SpecialMinion;
 import main.game.Game;
 import main.game.PlayerInfo;
 import main.output.ActionOutput;
@@ -182,7 +182,6 @@ public class ActionManager {
 
             }
             ActionOutput endGame = new ActionOutput();
-            System.out.println(e.getMessage());
             endGame.setGameEnded(e.getMessage());
             return endGame;
         } catch (Exception e) {

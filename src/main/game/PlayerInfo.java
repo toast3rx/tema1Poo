@@ -1,12 +1,12 @@
 package main.game;
 
 import lombok.Data;
-import main.Exceptions.InvalidPlacementException;
-import main.cards.Card;
-import main.cards.enviroment.EnvironmentCard;
-import main.cards.minion.BackRow;
-import main.cards.minion.Minion;
-import main.heroes.Hero;
+import main.exception.InvalidPlacementException;
+import main.card.Card;
+import main.card.enviroment.EnvironmentCard;
+import main.card.minion.BackRow;
+import main.card.minion.Minion;
+import main.hero.Hero;
 
 import java.util.ArrayList;
 
@@ -121,8 +121,7 @@ public class PlayerInfo {
         Card card = deck.getCards().remove(0);
         hand.add(card);
 
-        } catch (Exception e) {
-            System.out.println("Deck is empty");
+        } catch (Exception ignored) {
         }
     }
 
